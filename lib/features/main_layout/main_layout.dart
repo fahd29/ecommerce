@@ -1,10 +1,11 @@
 import 'package:ecommerce_app/core/resources/assets_manager.dart';
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/widget/home_screen_app_bar.dart';
+import 'package:ecommerce_app/domain/di/di.dart';
 import 'package:ecommerce_app/features/main_layout/mainLayout_States.dart';
 import 'package:ecommerce_app/features/main_layout/mainlayout_viewModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class MainLayout extends StatelessWidget {
@@ -12,22 +13,25 @@ class MainLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MainLayoutViewModel viewModel=MainLayoutViewModel();
-    return BlocBuilder<MainLayoutViewModel,MainLayoutStates>(
-      bloc: viewModel,
+   // MainLayoutViewModel viewModel=MainLayoutViewModel();
+    return BlocProvider(
+  create: (context) => getIt<MainLayoutViewModel>(),
+  child: BlocBuilder<MainLayoutViewModel,MainLayoutStates>(
+     // bloc: viewModel,
   builder: (context, state) {
+    var cubit=context.watch<MainLayoutViewModel>();
     return Scaffold(
-      appBar: const HomeScreenAppBar(),
+      appBar:  HomeScreenAppBar(),
       extendBody: false,
-      body: viewModel.tabs[viewModel.currentIndex],
+      body: cubit.tabs[cubit.currentIndex],
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,
           child: BottomNavigationBar(
-            currentIndex: viewModel.currentIndex,
-            onTap: (value) => viewModel.changeSelectedIndex(value),
+            currentIndex: cubit.currentIndex,
+            onTap: (value) => cubit.changeSelectedIndex(value),
             backgroundColor: ColorManager.primary,
             type: BottomNavigationBarType.fixed,
             selectedItemColor: ColorManager.primary,
@@ -46,6 +50,7 @@ class MainLayout extends StatelessWidget {
       ),
     );
   },
+),
 );
   }
 }

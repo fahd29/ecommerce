@@ -2,9 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/styles_manager.dart';
 import 'package:ecommerce_app/core/widget/heart_button.dart';
-import 'package:ecommerce_app/domain/di/di.dart';
-import 'package:ecommerce_app/domain/entity/ProductResponseEntity.dart';
 import 'package:ecommerce_app/features/main_layout/categories/presentation/cubit/product_view_model.dart';
+import 'package:ecommerce_app/features/main_layout/mainlayout_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,7 +89,18 @@ class CustomProductWidget extends StatelessWidget {
                 Positioned(
                   top: height * 0.01,
                   right: width * 0.02,
-                  child: HeartButton(onTap: () {}),
+                  child: HeartButton(onTap: () {
+                    //add product to wishlist
+
+                    context.read<ProductViewModel>().addToWishList(productId);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("product added to wishlist successfully 🎉"),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),
@@ -159,7 +169,9 @@ class CustomProductWidget extends StatelessWidget {
                           onTap: () {
                             print("Add button clicked for product ID: $productId");
                             productViewModel.addToCart(productId);
-                             //context.read<ProductViewModel>().addToCart(productId);
+                            context.read<MainLayoutViewModel>().showCount(productId);
+
+                            //context.read<ProductViewModel>().addToCart(productId);
                            //BlocProvider.of<ProductViewModel>(context)..addToCart(productId);
                           },
                           child: Container(

@@ -1,12 +1,15 @@
 import 'package:ecommerce_app/core/routes_manager/routes.dart';
+import 'package:ecommerce_app/domain/di/di.dart';
 import 'package:ecommerce_app/domain/entity/ProductResponseEntity.dart';
 import 'package:ecommerce_app/features/auth/presentation/login/sign_in_screen.dart';
 import 'package:ecommerce_app/features/auth/presentation/register/sign_up_screen.dart';
 import 'package:ecommerce_app/features/cart/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/main_layout/categories/presentation/cubit/product_view_model.dart';
 import 'package:ecommerce_app/features/main_layout/main_layout.dart';
 import 'package:ecommerce_app/features/product_details/presentation/screen/product_details.dart';
 import 'package:ecommerce_app/features/products_screen/presentation/screens/products_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {
@@ -17,14 +20,18 @@ class RouteGenerator {
       case Routes.mainRoute:
         return MaterialPageRoute(builder: (_) => const MainLayout());
 
+
+
+
+
       case Routes.productsScreenRoute:
         return MaterialPageRoute(builder: (_) => const ProductsScreen());
 
-      // case Routes.productDetails:
-      //   final product = settings.arguments as ProductEntity;
-      //   return MaterialPageRoute(
-      //     builder: (_) => ProductDetails(product: product),
-      //   );
+    // case Routes.productDetails:
+    //   final product = settings.arguments as ProductEntity;
+    //   return MaterialPageRoute(
+    //     builder: (_) => ProductDetails(product: product),
+    //   );
 
       case Routes.signInRoute:
         return MaterialPageRoute(builder: (_) => const SignInScreen());

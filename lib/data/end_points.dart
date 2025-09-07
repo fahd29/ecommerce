@@ -5,4 +5,6 @@ class EndPoints{
   static const String brand="/api/v1/brands";
   static const String getProducts="/api/v1/products";
   static const String addToCart="/api/v1/cart";
+  static const String wishList="/api/v1/wishlist";
+
 }

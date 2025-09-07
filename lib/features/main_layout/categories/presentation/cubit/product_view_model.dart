@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/domain/entity/ProductResponseEntity.dart';
+import 'package:ecommerce_app/domain/use_case/add_product_towishList_usecase.dart';
 import 'package:ecommerce_app/domain/use_case/add_to_cart_usecase.dart';
 import 'package:ecommerce_app/domain/use_case/product_usecase.dart';
 import 'package:ecommerce_app/features/main_layout/categories/presentation/cubit/product_states.dart';
@@ -8,11 +9,14 @@ import 'package:injectable/injectable.dart';
 class ProductViewModel extends Cubit<ProductStates> {
   final ProductUseCase productUseCase;
   final AddToCartUseCase addToCartUseCase;
+  AddProductToWishListUseCase addProductToWishListUseCase;
   List<ProductEntity> products = [];
+
   int numberOfCartItems=0;
 
   ProductViewModel({required this.productUseCase,
-    required this.addToCartUseCase
+    required this.addToCartUseCase,
+    required this.addProductToWishListUseCase
 
   }) : super(ProductInit());
 
@@ -32,9 +36,20 @@ class ProductViewModel extends Cubit<ProductStates> {
     either.fold((error) {
      // emit(AddToCartError(failures: error));
     }, (response) {
-      numberOfCartItems=response.numOfCartItems!.toInt();
+      //numberOfCartItems=response.numOfCartItems!.toInt();
+
       print("num of cart item:$numberOfCartItems");
       emit(AddToCartSuccess(addToCartEntity: response));
+    });
+  }
+  void addToWishList(String productId) async {
+    // emit(AddToCartLoadingState());
+    var either = await addProductToWishListUseCase.invoke(productId);
+    either.fold((error) {
+      // emit(AddToCartError(failures: error));
+    }, (response) {
+      print("Product ID sent to wishlist: $productId");
+      emit(AddToWishListSuccess(addToWishListEntity: response));
     });
   }
 }

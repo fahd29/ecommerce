@@ -19,42 +19,43 @@ class ProductsScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(AppPadding.p16),
-        child: BlocConsumer<ProductViewModel, ProductStates>(
-          listener: (context, state) {
-          //   if ( state is AddToCartLoadingState) {
-          //     showDialog(context: context, builder: (context) {
-          //       return Center(child: CircularProgressIndicator(color: ColorManager.darkPrimary,));
-          //     },);
-          //   }
-          //   if (state is ProductSuccess) {
-          //     Navigator.pop(context);
-          //   }
-          //   if (state is AddToCartSuccess) {
-          //     // Navigator.pop(context);
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(
-          //         content: Text("Product added Successfully 🎉"),
-          //         backgroundColor: Colors.green,
-          //         duration: Duration(seconds: 3),
-          //       ),
-          //     );
-          //   }
-          //   if (state is ProductError || state is AddToCartError) {
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       SnackBar(
-          //         content: Text(state.failures?.errorMessage ?? "Unknown error"),
-          //         backgroundColor: Colors.red,
-          //         duration: const Duration(seconds: 3),
-          //       ),
-          //     );
-          //   }
-           },
+        child: BlocListener<ProductViewModel, ProductStates>(
+            listener: (context, state) {
+              //   if ( state is AddToCartLoadingState) {
+              //     showDialog(context: context, builder: (context) {
+              //       return Center(child: CircularProgressIndicator(color: ColorManager.darkPrimary,));
+              //     },);
+              //   }
+              //   if (state is ProductSuccess) {
+              //     Navigator.pop(context);
+              //   }
+              if (state is AddToCartSuccess) {
+                // Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Product added Successfully 🎉"),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+              //   if (state is ProductError || state is AddToCartError) {
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       SnackBar(
+              //         content: Text(state.failures?.errorMessage ?? "Unknown error"),
+              //         backgroundColor: Colors.red,
+              //         duration: const Duration(seconds: 3),
+              //       ),
+              //     );
+              //   }
+            }, child: BlocBuilder<ProductViewModel, ProductStates>(
           builder: (context, state) {
-            var cubit=BlocProvider.of<ProductViewModel>(context);
-              return state is ProductLoadingState? Center(child: CircularProgressIndicator(
-
-              )): GridView.builder(
-                itemCount: state.products?.length ?? 0,
+            var cubit = BlocProvider.of<ProductViewModel>(context);
+            if (state is ProductLoadingState) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return GridView.builder(
+                itemCount: cubit.products.length ?? 0,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8,
@@ -62,22 +63,24 @@ class ProductsScreen extends StatelessWidget {
                   childAspectRatio: 0.65,
                 ),
                 itemBuilder: (context, index) {
-                  final product = state.products![index];
+                  final product = cubit.products[index];
                   return InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductDetails(product: product),
+                          builder: (context) =>
+                              ProductDetails(product: product),
                         ),
                       );
                     },
                     child: BlocProvider.value(
                       value: cubit,
                       child: CustomProductWidget(
-                        productViewModel:cubit ,
+                        productViewModel: cubit,
                         productId: product.id ?? "",
-                        image: product.imageCover ?? ImageAssets.categoryHomeImage,
+                        image:
+                        product.imageCover ?? ImageAssets.categoryHomeImage,
                         title: product.title ?? "No title",
                         price: product.price?.toDouble() ?? 0,
                         rating: product.ratingsAverage?.toDouble() ?? 0,
@@ -89,14 +92,9 @@ class ProductsScreen extends StatelessWidget {
                   );
                 },
               );
-
-
-
-
-
-            //return const SizedBox();
+            }
           },
-        ),
+        )),
       ),
     );
   }
